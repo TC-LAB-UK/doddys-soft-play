@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doddy's Soft Play Cafe – Baswich, Stafford</title>
+<meta name="description" content="Baswich, Stafford.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Palette pulled directly from the site's saved CSS custom properties (exact tokens, not estimated) */
+  :root{
+    --ink:#28613e;
+    --cream:#fffced;
+    --panel:#ffffff;
+    --dark-green:#28613e;
+    --dark-green-2:#1a4529;
+    --light-green:#abce76;
+    --orange:#ee8040;
+    --rust:#c8643a;
+    --tan:#eaa763;
+    --near-black:#1a1a1a;
+    --stone:#3f5b48;
+    --line: rgba(40,97,62,0.14);
+    --radius: 24px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Inter',sans-serif;font-weight:500;color:var(--ink);background:var(--cream);line-height:1.5;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4{font-family:'Anton',sans-serif;font-weight:400;line-height:1.2;color:var(--dark-green);text-transform:none;letter-spacing:0em;}
+  .doodle{position:absolute;display:block;pointer-events:none;z-index:2;}
+  .doodle svg{width:100%;height:100%;display:block;}
+  .heading-wrap{position:relative;display:inline-block;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 32px;}
+  .eyebrow{display:inline-block;background:var(--light-green);color:var(--dark-green);font-family:'Inter',sans-serif;font-weight:700;font-size:14px;
+    letter-spacing:1px;text-transform:uppercase;padding:8px 18px;border-radius:100px;margin-bottom:16px;}
+  /* real button: hard-edge offset box-shadow, 8px/8px, border-radius 4px — matches saved source exactly */
+  .btn-wrap{display:inline-block;position:relative;}
+  .btn{position:relative;display:inline-block;background:var(--dark-green);color:#fff;font-family:'Inter',sans-serif;font-weight:600;font-size:18px;letter-spacing:0.5px;
+    padding:14px 28px;border-radius:4px;border:0.25px solid var(--dark-green);cursor:pointer;
+    box-shadow:8px 8px 0px 0px var(--light-green);transition:transform .15s ease, box-shadow .15s ease;}
+  .btn:hover{transform:translate(4px,4px);box-shadow:4px 4px 0px 0px var(--light-green);}
+  .btn.light{background:var(--light-green);color:var(--dark-green);box-shadow:8px 8px 0px 0px #fff;}
+  .btn.light:hover{box-shadow:4px 4px 0px 0px #fff;}
+  section{padding:88px 0;}
+  @media(max-width:768px){section{padding:56px 0;} .wrap{padding:0 20px;}}
+  .note-banner{background:#fff3cd;color:#5c4a12;border-bottom:1px solid #e5c874;font-size:13px;text-align:center;padding:10px 16px;}
+
+  /* scroll-reveal animation, mimics Framer's fade-up-on-scroll entrances */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  header{position:sticky;top:0;z-index:50;background:rgba(254,247,224,0.92);backdrop-filter:blur(10px);}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:12px 32px;max-width:1200px;margin:0 auto;}
+  .logo img{height:46px;width:auto;}
+  .nav-links{display:none;gap:28px;font-size:15px;font-weight:600;color:var(--dark-green);}
+  @media(min-width:900px){.nav-links{display:flex;}}
+  .nav-links a:hover{color:var(--orange);}
+  .nav-links a.active{color:var(--orange);}
+
+  .page-hero{padding:64px 0 20px;}
+  .page-hero h1{font-size:clamp(34px,7vw,80px);letter-spacing:-2px;margin-bottom:18px;}
+  .page-hero p{font-size:18px;color:var(--ink);font-weight:500;max-width:520px;}
+
+  /* one menu category per full-width row: image+heading column vs price-list column, alternating sides */
+  .menu-row{display:grid;align-items:start;}
+  .menu-row-left{grid-template-columns:auto 1fr;}
+  .menu-row-right{grid-template-columns:1fr auto;}
+  @media(max-width:820px){
+    .menu-row-left,.menu-row-right{grid-template-columns:1fr;gap:32px !important;}
+    .menu-row-right > div:first-child{order:2;}
+  }
+
+  .tilt-wrap{position:relative;}
+  .tilt-blob{position:absolute;background:var(--light-green);border-radius:20px;z-index:0;}
+  .tilt-img{position:relative;z-index:1;border-radius:16px;overflow:hidden;box-shadow:0 20px 40px rgba(33,84,52,0.18);transition:transform .3s ease;}
+  .tilt-img img{width:100%;height:100%;object-fit:cover;display:block;}
+  .tilt-wrap:hover .tilt-img{transform:scale(1.02) rotate(0deg) !important;}
+  .feature-card .img{transition:transform .3s ease;}
+  .feature-card:hover .img{transform:translateY(-4px);}
+
+  .dark-card{
+    position:relative;border-radius:32px;border:6px solid var(--light-green);overflow:hidden;padding:60px 44px;text-align:center;
+    background-size:cover;background-position:center;
+  }
+  .dark-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(20,50,32,0.88), rgba(20,50,32,0.94));z-index:0;}
+  .dark-card > *{position:relative;z-index:1;}
+  .dark-card h2{color:#fff;font-size:clamp(26px,3.4vw,40px);margin-bottom:16px;}
+  .dark-card p{color:#e3ecdc;max-width:480px;margin:0 auto 30px;font-weight:600;}
+  .dark-card.left{text-align:left;}
+  .dark-card.left p{margin:0 0 26px;}
+  .dark-card ul{list-style:none;margin-bottom:26px;}
+  .dark-card li{color:#fff;font-weight:600;font-size:15px;padding:4px 0;}
+
+  .price-list dt{font-family:'Anton',sans-serif;font-weight:400;color:var(--dark-green);font-size:20px;margin-top:38px;letter-spacing:0em;}
+  .price-list dt:first-child{margin-top:0;}
+  .price-list dd{color:var(--dark-green);font-weight:700;font-size:17px;margin-top:4px;}
+  .price-list hr{border:none;border-top:1px solid var(--line);margin:24px 0;}
+
+  .icon-row{display:flex;align-items:flex-start;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);}
+  .icon-row:last-child{border-bottom:none;}
+  .icon-circle{width:44px;height:44px;border-radius:50%;background:var(--light-green);display:flex;align-items:center;justify-content:center;flex:none;font-size:18px;}
+  .icon-row h4{font-size:16px;margin-bottom:2px;}
+  .icon-row p{font-size:14.5px;color:var(--stone);font-weight:600;}
+
+  .package-card{margin-bottom:28px;}
+  .package-card h4{font-family:'Anton',sans-serif;font-weight:400;color:var(--dark-green);font-size:18px;margin-bottom:8px;}
+  .package-card ul{list-style:none;}
+  .package-card li{font-size:14.5px;color:var(--stone);font-weight:600;padding:3px 0;}
+
+  .faq-plain{border-bottom:1px solid var(--line);padding:18px 0;}
+  .faq-plain h4{font-family:'Anton',sans-serif;font-weight:400;color:var(--dark-green);font-size:16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+  .faq-plain .a{max-height:0;overflow:hidden;transition:max-height .25s ease;}
+  .faq-plain.open .a{max-height:120px;}
+  .faq-plain .a p{padding-top:10px;font-size:14px;color:var(--stone);font-weight:600;}
+
+  .dotted-bg{background-color:var(--cream);background-image:radial-gradient(circle, rgba(33,84,52,0.14) 1.2px, transparent 1.2px);background-size:16px 16px;}
+
+  .community-head{max-width:680px;margin:0 auto 44px;text-align:center;}
+  .community-head h2{font-size:clamp(24px,2.8vw,32px);}
+  .feature-grid{display:grid;gap:30px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+  .feature-card .img{border-radius:16px;overflow:hidden;aspect-ratio:4/3;margin-bottom:18px;}
+  .feature-card .img img{width:100%;height:100%;object-fit:cover;}
+  .feature-card h3{font-size:19px;margin-bottom:8px;}
+  .feature-card p{font-size:14px;color:var(--stone);font-weight:600;}
+
+  .menu-teaser-layout{display:grid;gap:40px;}
+  @media(min-width:900px){.menu-teaser-layout{grid-template-columns:0.8fr 1.2fr;align-items:start;}}
+  .menu-gallery{display:grid;gap:16px;grid-template-columns:1fr 1fr;}
+  .menu-gallery .img{border-radius:16px;overflow:hidden;aspect-ratio:1/1;}
+  .menu-gallery .img.tall{aspect-ratio:3/4;}
+  .menu-gallery img{width:100%;height:100%;object-fit:cover;}
+
+  .info-section{background:var(--dark-green);color:#fff;text-align:center;}
+  .info-section h2{color:#fff;font-size:clamp(26px,3.2vw,36px);margin-bottom:44px;}
+  .info-grid{display:grid;gap:32px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));text-align:left;}
+  .info-card .shape{width:52px;height:52px;margin-bottom:16px;object-fit:contain;}
+  .info-card h4{color:#fff;font-size:18px;margin-bottom:8px;}
+  .info-card p{font-size:14px;color:#cfe0d1;font-weight:600;}
+
+  .testi-layout{display:grid;gap:40px;align-items:center;}
+  @media(min-width:900px){.testi-layout{grid-template-columns:0.8fr 1.2fr;}}
+  .testi-copy blockquote{font-size:17px;font-weight:600;color:var(--dark-green);margin-bottom:20px;}
+  .testi-copy cite{font-style:normal;font-weight:700;color:var(--orange);}
+
+  .final-cta{background:var(--dark-green);}
+  .final-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,0.16);}
+  .final-inner h2{color:var(--light-green);font-size:clamp(24px,3vw,34px);}
+
+  footer{background:var(--dark-green);color:#cfe0d1;padding-top:44px;}
+  .footer-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:32px;padding:44px 0;}
+  .footer-grid .cols h4{color:#fff;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:14px;font-weight:700;}
+  .footer-grid .cols a{display:block;font-size:14px;color:#cfe0d1;margin-bottom:10px;opacity:.9;}
+  .footer-grid .cols a:hover{opacity:1;}
+  .footer-cols-row{display:flex;gap:60px;}
+  .footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:20px 0 28px;font-size:13px;color:#a8c2ac;}
+  .social-row{display:flex;gap:10px;}
+  .social-row a{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+</style>
+
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="index.html" class="logo"><img src="assets/XL5DKMfbmz4Cjc4qgkVi3jzss.svg" alt="Doddy's Soft Play Cafe"></a>
+    <div class="nav-links">
+      <a href="about.html">About</a>
+      <a href="menu.html">Menu</a>
+      <a href="parties.html">Parties</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="btn-wrap"><a class="btn" href="https://bookwhen.com/doddys" target="_blank" rel="noopener">Book your play session</a></div>
+  </nav>
+</header>
+
+<section class="page-hero">
+  <div class="wrap" style="display:grid;gap:40px;align-items:center;grid-template-columns:1.1fr 0.9fr;">
+    <div>
+      <div class="eyebrow">Baswich, Stafford</div>
+      <h1>Enjoy a delicious coffee whilst the kids go wild.</h1>
+      <p>A bright, friendly soft play café at the heart of your community, where fun, food, and friendships come together.</p>
+      <div class="btn-wrap" style="margin-top:26px;"><a class="btn" href="https://bookwhen.com/doddys" target="_blank" rel="noopener">Book your play session</a></div>
+    </div>
+    <div class="tilt-wrap">
+      <div class="tilt-blob" style="right:-6%;top:8%;width:70%;height:88%;transform:rotate(4deg);"></div>
+      <div class="tilt-img" style="transform:rotate(4deg);aspect-ratio:4/5;">
+        <img src="assets/DKgCDlHpVabE2jyTHzZ7BYlHQ.jpeg" alt="Doddy's Soft Play Cafe play area">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="dark-card" style="background-image:url('assets/m7hUffe3LLF9lqYbaxKKSUniw.jpg');">
+      <div class="eyebrow">Book Now</div>
+      <h2>Just £7.50 for a child and adult</h2>
+      <p>Come along and enjoy the fun! Visits are by booking and card payment only. We do accept walk-ins, but recommend booking in case we are fully booked!</p>
+      <div class="btn-wrap light"><a class="btn light" href="https://bookwhen.com/doddys" target="_blank" rel="noopener">Book your play session</a></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="community-head">
+      <h2>We're committed to creating a space for the young ones to run free in a safe environment, where parents can get together and enjoy the community and cafe.</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="img"><img src="assets/m7hUffe3LLF9lqYbaxKKSUniw.jpg" alt="A safe space for every child"></div>
+        <h3>A Safe Space for Every Child</h3>
+        <p>We take pride in maintaining a clean and secure environment where children can explore, climb, and play with confidence.</p>
+      </div>
+      <div class="feature-card">
+        <div class="img"><img src="assets/drwsYqJ2wdG1YVWV9tahEYHaEwg.jpg" alt="A break for busy parents"></div>
+        <h3>A Break for Busy Parents</h3>
+        <p>Enjoy quality coffee, homemade treats, and a bit of well-earned relaxation while your little ones burn off energy.</p>
+      </div>
+      <div class="feature-card">
+        <div class="img"><img src="assets/Y17kDh85MJkX2Ik0vBrN3bVqw.jpg" alt="A hub for the whole community"></div>
+        <h3>A Hub for the Whole Community</h3>
+        <p>From first-time mums to long-time locals, our café is a place for connection, conversation, and community support.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="dark-card left" style="background-image:url('assets/DKgCDlHpVabE2jyTHzZ7BYlHQ.jpeg');">
+      <div class="eyebrow">Party Time!</div>
+      <h2>Celebrations Made Simple</h2>
+      <p>Celebrations made simple with our exclusive party hire packages! Let us take care of the fun and make the planning of little ones' birthday special and stress-free!</p>
+      <ul>
+        <li>- Parties available to book on Saturdays and Sundays</li>
+        <li>- Two hour exclusive party hire from £150 for 10 children</li>
+      </ul>
+      <div class="btn-wrap light"><a class="btn light" href="parties.html">Book a Party</a></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap menu-teaser-layout">
+    <div>
+      <div class="eyebrow">Menu Magic</div>
+      <h2>Tasty Treats for Big &amp; Little Appetites</h2>
+      <p style="color:var(--stone);font-weight:600;margin:14px 0 22px;max-width:380px;">From artisan coffee and cakes to brunch and paninis, we serve up food the whole family will love.</p>
+      <div class="btn-wrap"><a class="btn" href="menu.html">View menu</a></div>
+    </div>
+    <div class="menu-gallery">
+      <div class="img tall"><img src="assets/wAxAxk4SkgO4ALwzFBCwP1Ef33I.jpg" alt="Panini"></div>
+      <div class="img tall"><img src="assets/vZrAIor2QooR6b4eeBBBBw3Aw.jpg" alt="Coffee"></div>
+      <div class="img"><img src="assets/6da8vGbrw2mmZVPmTFaMTDGY9cU.jpg" alt="Cafe treat"></div>
+      <div class="img"><img src="assets/hVhRqsMwdbuYnjiYQBxMQ5tQY50.jpg" alt="Cafe treat"></div>
+    </div>
+  </div>
+</section>
+
+<section class="info-section">
+  <div class="wrap">
+    <h2>Important Info</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <img class="shape" src="assets/WJVsgJcdiQBOW0MbJ1Cw5ZTV4.svg" alt="">
+        <h4>Opening Hours</h4>
+        <p>We're open 7 days a week. Join us for a play and bite to eat!</p>
+      </div>
+      <div class="info-card">
+        <img class="shape" src="assets/8zubqkyzDN6ayRG3uS0JV1mgvY.svg" alt="">
+        <h4>Parking &amp; Access</h4>
+        <p>Free on-site parking and fully accessible for buggies, prams, and wheelchairs.</p>
+      </div>
+      <div class="info-card">
+        <img class="shape" src="assets/GkcYCxyPZbjQbEQhYmyyiHQfbI4.svg" alt="">
+        <h4>Age Range</h4>
+        <p>Our play zones are designed for children aged 0–5, with baby-friendly areas too.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap testi-layout">
+    <div class="tilt-wrap">
+      <div class="tilt-blob" style="left:-6%;bottom:-6%;width:76%;height:88%;transform:rotate(-3deg);"></div>
+      <div class="tilt-img" style="transform:rotate(-3deg);aspect-ratio:4/5;">
+        <img src="assets/DKgCDlHpVabE2jyTHzZ7BYlHQ.jpeg" alt="Doddy's Soft Play Cafe">
+      </div>
+    </div>
+    <div class="testi-copy">
+      <div class="eyebrow">What Locals Are Saying</div>
+      <blockquote>"We had the best morning at Doddy's Soft Play Cafe! The staff were so welcoming and warm, which made the whole experience even better. Being able to let our daughter enjoy the soft play area while I relaxed was amazing — no chasing her around this time! I got to sit back and enjoy a delicious latte (they even offer milk alternatives and syrups). We also tried their incredible brownie, and our daughter loved her cupcake — both were absolutely delicious. We can't wait to go back soon and try their lunch menu next time!"</blockquote>
+      <cite>— Grace, Local Parent</cite>
+    </div>
+  </div>
+</section>
+<section class="final-cta">
+  <div class="wrap">
+    <div class="final-inner">
+      <h2>We look forward to seeing you 😊</h2>
+      <div class="btn-wrap light"><a class="btn light" href="https://bookwhen.com/doddys" target="_blank" rel="noopener">Book your play session</a></div>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="wrap footer-grid">
+    <a href="index.html" class="logo"><img src="assets/XL5DKMfbmz4Cjc4qgkVi3jzss.svg" alt="Doddy's Soft Play Cafe"></a>
+    <div class="footer-cols-row">
+      <div class="cols">
+        <h4>Menu</h4>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="menu.html">Menu</a>
+        <a href="parties.html">Parties</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="cols">
+        <h4>Info</h4>
+        <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span>&copy; 2026 Doddy's Soft Play Cafe. All rights reserved.</span>
+    <div class="social-row">
+      <a href="https://www.facebook.com" target="_blank" rel="noopener">f</a>
+      <a href="https://www.instagram.com" target="_blank" rel="noopener">ig</a>
+    </div>
+  </div>
+</footer>
+<script>
+  document.querySelectorAll('.faq-plain h4').forEach(h=>{
+    h.addEventListener('click',()=>{
+      const item = h.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-plain').forEach(i=>{i.classList.remove('open'); i.querySelector('h4 span').textContent='+';});
+      if(!isOpen){ item.classList.add('open'); h.querySelector('span').textContent='−'; }
+    });
+  });
+
+  // fade-up-on-scroll, mimicking Framer's entrance animations
+  document.querySelectorAll('section > .wrap, section .dark-card').forEach(el=>el.classList.add('reveal'));
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
