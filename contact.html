@@ -127,6 +127,11 @@
   .tilt-img{position:relative;z-index:1;border-radius:16px;overflow:hidden;box-shadow:0 20px 40px rgba(33,84,52,0.18);transition:transform .3s ease;}
   .tilt-img img{width:100%;height:100%;object-fit:cover;display:block;}
   .tilt-wrap:hover .tilt-img{transform:scale(1.02) rotate(0deg) !important;}
+
+  /* second, smaller overlapping photo — for spots with two real photos instead of one */
+  .accent-img{position:absolute;z-index:2;width:48%;border:5px solid var(--cream);border-radius:14px;
+    overflow:hidden;box-shadow:0 14px 30px rgba(33,84,52,0.22);}
+  @media(max-width:600px){.accent-img{width:42%;border-width:4px;}}
   .feature-card .img{transition:transform .3s ease;}
   .feature-card:hover .img{transform:translateY(-4px);}
 
